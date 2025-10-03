@@ -46,6 +46,13 @@ export const login = async (req, res, next) => {
     const ok = await user.comparePassword(password);
     if (!ok) return res.status(401).json({ message: 'Invalid email or password' });
 
+
+req.session.userId = String(user._id);
+res.json({
+  user: { id: user._id, name: user.name, email: user.email, role: user.role || 'user' }
+  // you can still return token if you want both, but not required for sessions
+});
+
     // Use the helper so you don't need to import jsonwebtoken here
     const token = signToken(user._id);
 
@@ -56,4 +63,12 @@ export const login = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// POST /logout
+export const logout = (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie('sid');
+    res.json({ message: 'logged out' });
+  });
 };
