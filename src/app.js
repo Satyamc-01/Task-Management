@@ -29,6 +29,18 @@ app.use(cors({
   credentials: true
 }));
 
+app.get('/', (req, res) => {
+  res.type('html').send(`
+    <h1>Task Management API</h1>
+    <p>It's alive ✅</p>
+    <ul>
+      <li>POST <code>/register</code></li>
+      <li>POST <code>/login</code></li>
+      <li>GET  <code>/tasks?filter=all|pending|completed</code> (requires Bearer token)</li>
+      <li>GET  <code>/health</code></li>
+    </ul>
+  `);
+});
 
 app.get('/health', (req, res) => res.json({ ok: true }));
 
