@@ -1,0 +1,133 @@
+body * { box-sizing: border-box; }
+
+:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+.container { max-width: 420px; margin: 40px auto; padding: 24px; border: 1px solid #eee; border-radius: 10px; }
+h1 { margin-top: 0; }
+label { display: block; margin: 12px 0; }
+input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+button { margin-top: 12px; padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; }
+.error { color: #b00020; margin: 8px 0 0; }
+a { text-decoration: none; }
+h2 { margin: 16px 0 8px; }
+form label { display: block; margin: 10px 0; }
+form input, form select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+ul li button { padding: 6px 10px; border: none; border-radius: 8px; cursor: pointer; }
+ul li button + button { margin-left: 6px; }
+.dashboard_outer { max-width: 800px; margin: 40px auto; padding: 24px; border: 1px solid #eee; border-radius: 10px; }
+.dashboard_outer.admin-mode { max-width: 1080px; }
+.dashboard_outer.admin-mode table { width: 100%; }
+td.task-status-parent { width: auto; }
+
+/* layout */
+.dash-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid #eee; padding-bottom: 8px;
+}
+.dash-title { margin: 0; }
+
+.dash-layout { display: flex; gap: 16px; min-height: 70vh; margin-top: 16px; }
+.dash-sidebar {
+  width: 220px; border: 1px solid #eee; border-radius: 10px; padding: 12px;
+  height: fit-content; position: sticky; top: 16px;
+}
+.dash-tab {
+  display: block; width: 100%; text-align: left;
+  padding: 10px 12px; border: none; border-radius: 8px; cursor: pointer;
+  background: #f7f7f7; margin-bottom: 8px;
+}
+.dash-tab.active { background: #eaeaea; font-weight: 600; }
+
+.dash-content { flex: 1; border: 1px solid #eee; border-radius: 10px; padding: 16px; }
+
+/* common bits */
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tasks-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+
+.task-list { list-style: none; padding: 0; margin: 0; }
+.task-card {
+  border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 10px;
+}
+.task-head { display: flex; justify-content: space-between; align-items: center; }
+.task-sub { font-size: 12px; opacity: 0.7; }
+
+/* buttons/inputs already exist; these make them comfy inside cards */
+ul li button { padding: 6px 10px; border: none; border-radius: 8px; cursor: pointer; }
+ul li button + button { margin-left: 6px; }
+
+/* mobile tweaks */
+@media (max-width: 720px) {
+  .dash-layout { flex-direction: column; }
+  .dash-sidebar { width: 100%; position: static; }
+}
+
+select[multiple] {
+  width: 100%;
+  min-height: 120px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.dash-content form .row label { width:100%; }
+.dash-content form label { font-size:13px; }
+.task-status-parent {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+}
+.dash-content .row label { margin:0; }
+select.task-status, .filter-task-staus {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-color: #ddd;
+}
+.task-status-parent select {
+    appearance: none;
+}
+
+form *:focus {
+  outline: 0px solid #4d90fe;
+  outline-offset: 0px;
+}
+
+.task-status-parent::after {
+  content: "";
+  position: absolute;
+  pointer-events: none; /* let clicks reach the select */
+  right: 12px;
+  top: 45%;
+  transform: translateY(-50%) rotate(0deg);
+  width: 8px;
+  height: 8px;
+  transition: transform 180ms ease;
+  /* draw a simple chevron using CSS borders (no image needed) */
+  border-right: 2px solid #988d8d;
+  border-bottom: 2px solid #988d8d;
+  transform-origin: center;
+  transform: translateY(-50%) rotate(45deg); /* down chevron */
+}
+
+.task-card input {
+  font-size:13px;
+}
+
+.css-1jqq78o-placeholder {
+  font-size:13px !important;
+  font-weight:400;
+  color: #000 !important;
+}
+
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #fff;
+  width: min(480px, 90vw);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
