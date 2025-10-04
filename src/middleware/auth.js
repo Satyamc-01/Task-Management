@@ -1,19 +1,23 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-export const requireAuth = async (req, res, next) => {
-  try {
-    const auth = req.headers.authorization || '';
-    const [, token] = auth.split(' ');
-    if (!token) return res.status(401).json({ message: 'No token' });
-
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(payload.sub).select('_id name email role');
-    if (!user) return res.status(401).json({ message: 'Invalid user' });
-
-    req.user = user; // includes role
-    next();
-  } catch {
-    res.status(401).json({ message: 'Unauthorized' });
+export async function requireAuth(req, res, next) {
+  // 1) Session cookie path
+  if (req.session?.userId) {
+    req.user = { _id: req.session.userId };  // keep shape consistent
+    return next();
   }
-};
+
+  // 2) Fallback: Bearer JWT (if you want to keep both)
+  const h = req.headers.authorization || '';
+  const token = h.startsWith('Bearer ') ? h.slice(7) : null;
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { _id: payload.sub };
+    return next();
+  } catch {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+}

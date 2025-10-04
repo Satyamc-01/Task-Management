@@ -1,20 +1,18 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-async function request(path, { method = 'GET', body, token } = {}) {
+export async function request(path, { method='GET', body } = {}) {
+  const token = localStorage.getItem('token'); // set this after /login
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     },
-    ...(body ? { body: JSON.stringify(body) } : {})
+    credentials: 'include',
+    body: body ? JSON.stringify(body) : undefined,
   });
-
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(data.message || `Request failed (${res.status})`);
-  }
+  if (!res.ok) throw new Error(data.message || 'Request failed');
   return data;
 }
 

@@ -1,10 +1,35 @@
 import { createClient } from 'redis';
 
-const url = process.env.REDIS_URL;
-export const redis = createClient({ url });
+const url = process.env.REDIS_URL || '';
 
-redis.on('error', (e) => console.error('[redis] error:', e.message));
+/**
+ * Create the client only if REDIS_URL is present.
+ * Enable TLS for rediss:// URLs.
+ */
+export const redis = url
+  ? createClient({
+      url,
+      socket: url.startsWith('rediss://') ? { tls: true } : {}
+    })
+  : null;
+
+// log the first error only, avoid endless spam
+let logged = false;
+if (redis) {
+  redis.on('error', (e) => {
+    if (!logged) {
+      console.warn('[redis] error:', e.message);
+      logged = true;
+    }
+  });
+}
+
 export async function initRedis() {
-  if (!redis.isOpen) await redis.connect();
+  if (!redis) {
+    console.log('[redis] REDIS_URL not set — skipping');
+    return;
+  }
+  if (redis.isOpen) return;
+  await redis.connect();
   console.log('[redis] connected');
 }

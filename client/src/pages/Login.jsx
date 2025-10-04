@@ -19,6 +19,8 @@ export default function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       nav('/dashboard');
+      localStorage.setItem('token', data.token);
+localStorage.setItem('user', JSON.stringify(data.user));
     } catch (error) {
       setErr(error.message);
     } finally {
@@ -43,3 +45,4 @@ export default function Login() {
     </div>
   );
 }
+
